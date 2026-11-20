@@ -115,3 +115,43 @@ The results suggest that combining pretrained PVT features with channel and spat
 The experimental comparison showed that PVT Attention U-Net outperformed the original U-Net across all three evaluation metrics on the CAMO test dataset.
 
 The results support continuing development with the PVT Attention U-Net architecture, followed by ablation experiments and evaluation on domain-specific solar-panel defect data.
+
+## Ablation Study: U-Net vs PVT Attention U-Net
+
+### Objective
+The purpose of this experiment was to compare the original U-Net architecture with the upgraded PVT Attention U-Net architecture and evaluate whether the pretrained PVT backbone and attention-based decoder improved segmentation performance.
+
+### Experimental Setup
+- Dataset: CAMO
+- Training images: 1,000
+- Testing images: 250
+- Input resolution: 256 × 256
+- Training epochs: 5
+- Loss function: BCEWithLogitsLoss
+- Evaluation metrics: S-measure, Adaptive E-measure, and MAE
+
+Both models were trained and evaluated using the same dataset split.
+
+### Results
+
+| Evaluation Metric | Original U-Net | PVT Attention U-Net |
+|---|---:|---:|
+| S-measure ↑ | 0.5803 | **0.7099** |
+| Adaptive E-measure ↑ | 0.6980 | **0.7930** |
+| MAE ↓ | 0.2307 | **0.1335** |
+
+### Analysis
+
+The PVT Attention U-Net achieved better results across all three evaluation metrics.
+
+- **S-measure:** Increased from 0.5803 to 0.7099, indicating improved structural similarity between predicted masks and ground-truth masks.
+- **Adaptive E-measure:** Increased from 0.6980 to 0.7930, indicating improved alignment between predictions and ground-truth masks.
+- **MAE:** Decreased from 0.2307 to 0.1335, indicating lower pixel-level prediction error.
+
+### Conclusion
+
+Based on these experiments, the PVT Attention U-Net performed better than the original U-Net on the CAMO test set. The upgraded architecture combines a pretrained PVTv2-B0 backbone, multi-scale feature extraction, and channel and spatial attention in its decoder.
+
+The results support selecting the PVT Attention U-Net as the improved architecture for this experiment.
+
+**Limitation:** This comparison evaluates two complete architectures. It does not isolate the individual contribution of the PVT backbone and attention modules. A further component-level ablation would be needed to measure the effect of each component independently.
