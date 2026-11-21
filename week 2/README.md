@@ -94,6 +94,54 @@ The relative MAE reduction was calculated using:
 
 The PVT Attention U-Net is a custom SINet-V2-inspired architecture, not an exact reproduction of SINet-V2.
 
+### PVT Backbone Implementation
+
+The PVT-based model uses the `timm` library to load a pretrained PVTv2-B0 backbone. The backbone extracts multi-scale features that are passed to the decoder.
+
+**Import and load the PVT backbone:**
+
+```python
+import timm
+import torch
+import torch.nn as nn
+
+# Load pretrained PVTv2-B0 backbone
+backbone = timm.create_model(
+    "pvt_v2_b0.in1k",
+    pretrained=True,
+    features_only=True
+)
+
+# Extract multi-scale features
+features = backbone(torch.randn(1, 3, 256, 256))
+
+for feature in features:
+    print(feature.shape)
+```
+
+**Use the backbone inside the model:**
+
+```python
+class PVTAttentionUNet(nn.Module):
+
+    def __init__(self, pretrained=True):
+        super().__init__()
+
+        self.backbone = timm.create_model(
+            "pvt_v2_b0.in1k",
+            pretrained=pretrained,
+            features_only=True
+        )
+
+    def forward(self, x):
+        features = self.backbone(x)
+
+        # Pass extracted features to the decoder
+        # (projection and decoder implementation)
+```
+
+The backbone is configured with `features_only=True` to return feature maps from multiple stages instead of a single classification output.
+
 ## 7. Final Decision
 
 Based on the experimental results, PVT Attention U-Net was selected as the better-performing architecture.
